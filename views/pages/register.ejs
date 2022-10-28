@@ -1,0 +1,24 @@
+<%- include ('../partials/header') %>
+
+<main>
+    <div class="container">
+        <form class="w-50 container mt-5" action="/register" method="post">
+            <h1 class="mb-4">Register</h1>
+            <div class="d-flex justify-content-between mb-3">
+                <label for="username" class="form-label me-5">Username</label>
+                <input type="text" class="form-control" id="username" name="username">
+            </div>
+            <div class="d-flex justify-content-between mb-3">
+                <label for="password" class="form-label me-5">Password</label>
+                <input type="password" class="form-control" id="password" name="password">
+            </div>
+            <hr>
+            <div class="d-flex justify-content-between">
+                <p>Already have an account? <a href="/login">Login</a></p>
+                <button type="submit" class="btn btn-primary">Register</button>
+            </div>
+        </form>
+    </div>
+</main>
+
+<%- include ('../partials/footer') %>
