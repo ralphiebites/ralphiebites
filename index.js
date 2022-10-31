@@ -31,7 +31,7 @@ app.set("view engine", "ejs");
 app.use(bodyParser.json());
 app.use(
     session({
-        secret: process.env.SESSION_SECRET,
+        secret : "something",
         saveUninitialized: false,
         resave: false,
     })
