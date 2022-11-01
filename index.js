@@ -31,7 +31,7 @@ app.set("view engine", "ejs");
 app.use(bodyParser.json());
 app.use(
     session({
-        secret : "something",
+        secret: "something",
         saveUninitialized: false,
         resave: false,
     })
@@ -56,8 +56,16 @@ app.get("/register", (req, res) => {
     res.render("pages/register");
 });
 
+app.get("/market", async (req, res) => {
+    res.render('pages/market');
+});
+
 app.get("/account", async (req, res) => {
-    res.redirect('pages/account');
+    res.render('pages/account');
+});
+
+app.get("/settings", async (req, res) => {
+    res.render('pages/settings');
 });
 
 app.get("/logout", (req, res) => {
@@ -92,14 +100,19 @@ app.post("/login", (req, res) => {
                 };
                 req.session.save();
 
-                res.redirect("/account");
+                res.redirect("/market");
             } else {
-                throw Error("Incorrect username or password.");
+                res.render("pages/login", {
+                    error: true,
+                    message: err.message,
+                });
             }
         })
         .catch(function (err) {
-            res.redirect("/login");
-            return console.log(err);
+            res.render("pages/login", {
+                error: true,
+                message: err.message,
+            });
         });
 });
 

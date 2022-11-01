@@ -4,6 +4,12 @@
     <div class="container">
         <div class="container">
             <form class="w-50 container mt-5" action="/login" method="post">
+                <% if (locals.message) { %>
+                <div class="alert alert-danger alert-dismissible fade show <%- locals.error ? 'visible' : 'invisible' %>" role="alert">
+                    Incorrect username or password!
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                <% } %>
                 <h1 class="mb-4">Login</h1>
                 <div class="d-flex justify-content-between mb-3">
                     <label for="username" class="form-label me-5">Username</label>
