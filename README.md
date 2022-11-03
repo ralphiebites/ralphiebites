@@ -1,5 +1,9 @@
 # ralphiebites
 
+## Team Name & Number:
+Ankardav
+Recitation Group 15-06
+
 ## Brief Application description:
 
 Freshmen living on campus have meal plans which reset every week. However, people rarely use all their meal plans and often have extra. Thus, they’re wasted during the weekly reset. 
