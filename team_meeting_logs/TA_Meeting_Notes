@@ -1,0 +1,21 @@
+FIRST MEETING (October 31, 2022 6:15PM)
+- went through a brief overview of what weekly meetings will be about
+    - will be using agile method on team meetings & meetings with TA will be sprint
+- presented some coding progress
+    - got the docker-compose & .env working
+    - started on some ejs files
+- advised to further develop the project base/overview
+    - make sure the wireframes, use case diagram, and other ideas are developed before we start code (to prevent mid-code change)
+    - presented the current wireframe:
+        - home page with amount that can be transferred (give and take)
+            - display the possible opportunities/amount of people who need 
+        - transfer page
+            - available to make request & transfer of meal swipes
+        - account page
+            - suggested potentially making a transaction history
+            - suggested potentially make a profile page for rating accounts/user based on the number of transactions they have made
+- thing to do before friday
+    - add login & register to a accessible page
+    - add login & register in the wireframe
+    - add more/finish the project board & user stories ready
+    - start thinking about the databases required for api & application to work
