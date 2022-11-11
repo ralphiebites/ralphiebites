@@ -7,4 +7,27 @@
     </div>
 </main>
 
+<main>
+    <div class="container">
+      <!-- THE REST OF YOUR HTML CODE GOES HERE -->
+      <form action="/delete_user" method="DELETE">
+          <!-- Email Address -->
+          <div class="col-md-4">
+              <label for="Email" class="form-label">Email</label>
+              <input type="email" class="form-control" id="validationDefault01" name="email" value="Enter your email" required>
+              <small style="color: grey;" class="w-100">We'll never share your email with anyone else.</small>
+          </div>
+           <!-- User name -->
+           <div class="col-md-4">
+              <label for="text" class="form-label">Username</label>
+              <input type="text" class="form-control" id="validationDefault01" name="username" value="Enter your User Name" required>
+          </div>
+          <div class="col-12">
+              <button class="btn btn-primary" type="submit">Login</button>
+          </div>
+      </form>
+      <!-- FORM END-->
+    </div>
+</main>
+
 <%- include ('../partials/footer') %>
