@@ -116,6 +116,22 @@ app.post("/login", (req, res) => {
         });
 });
 
+// Delete Account API Route
+app.delete('/delete_user', function (req, res) {
+    const query = 'DELETE FROM users WHERE student_id=$1';
+    db.any(query, [req.body.student_id])
+      .then(function (data) {
+        res.status(200).json({
+          status: 'success',
+          data: data,
+          message: 'user deleted successfully',
+        });
+      })
+      .catch(function (err) {
+        return console.log(err);
+      });
+});
+
 // Authentication middleware
 const auth = (req, res, next) => {
     if (!req.session.user) {
