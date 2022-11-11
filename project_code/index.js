@@ -99,7 +99,6 @@ app.post("/login", (req, res) => {
                     api_key: process.env.API_KEY,
                 };
                 req.session.save();
-
                 res.redirect("/market");
             } else {
                 res.render("pages/login", {
@@ -117,7 +116,7 @@ app.post("/login", (req, res) => {
 });
 
 // Delete Account API Route
-app.delete('/delete_user', function (req, res) {
+app.post('/delete_user', function (req, res) {
     const query = 'DELETE FROM users WHERE student_id=$1';
     db.any(query, [req.body.student_id])
       .then(function (data) {
