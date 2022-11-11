@@ -77,6 +77,11 @@ app.get("/logout", (req, res) => {
     res.render("pages/login");
 });
 
+//future api for internal get meal. just need to figure out it's purpose
+app.get("/getmeals", (req, res) => {
+
+});
+
 // POST requests
 app.post("/register", async (req, res) => {
     const hash = await bcrypt.hash(req.body.password, 10);
