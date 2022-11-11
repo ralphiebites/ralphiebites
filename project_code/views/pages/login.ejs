@@ -1,4 +1,4 @@
-<%- include ('../partials/header') %>
+<!-- <%- include ('../partials/header') %>
 
 <main>
     <div class="container">
@@ -28,5 +28,45 @@
         </div>
     </div>
 </main>
+
+<%- include ('../partials/footer') %> -->
+
+<%- include ('../partials/header') %><%- include ('../partials/menu') %>
+
+<main>
+    <body style = "background-color: burlywood;"></body> 
+    <button onclick="document.getElementById('id01').style.display='block'"  class="btn btn-primary">Login</button>
+        <div id="id01" class="modal">
+  
+        <!-- <form class="modal-content animate" action="/action_page.php" method="post"></form>     -->
+            <form class="w-50 container mt-5" action="/login" method="post">
+            <% if (locals.message) { %>
+                <div class="alert alert-danger alert-dismissible fade show <%- locals.error ? 'visible' : 'invisible' %>" role="alert">
+                    Incorrect username or password!
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            <% } %>
+            <h1 class="mb-4" style = "color: #030303; font-size: 85px; Letter-spacing: 5px; border-radius: 5px; width: 400px  ;">Login Page</h1>
+            <div class="d-flex justify-content-between mb-3">
+                <label for="username" class="form-label me-5" style="text-align: center; font-size: 15px; text-transform: uppercase; color: #030303; Letter-spacing: 5px; font-weight: 700; ">Username</label>
+                <input type="text" class="form-control" id="username" name="username" placeholder="e.g. RalphieBuffalo">
+            </div>
+            <div class="d-flex justify-content-between mb-3">
+                <label for="password" class="form-label me-5" style="text-align: center; font-size: 15px; text-transform: uppercase; color: #030303; Letter-spacing: 5px; font-weight: 700; ">Password</label>
+                <input type="password" class="form-control" id="password" name="password" placeholder="Enter password">
+            </div>
+            <div class="d-flex justify-content-between">
+                <p>Don't have an account? <a href="/register">Register</a></p>
+                <label>
+                    <input type="checkbox" checked="checked" name="remember"> Remember me
+                </label>
+            </div>
+            <div>
+                <button type="submit" class="btn btn-primary" style ="padding: 10px 300px; margin: 10px 5px;">Login</button>
+            </div>
+        </form>
+    </div>
+</main>
+
 
 <%- include ('../partials/footer') %>
