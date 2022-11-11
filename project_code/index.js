@@ -68,6 +68,10 @@ app.get("/settings", async (req, res) => {
     res.render('pages/settings');
 });
 
+app.get("/about_us", async (req, res) => {
+    res.render('pages/about_us');
+});
+
 app.get("/logout", (req, res) => {
     req.session.destroy();
     res.render("pages/login");
