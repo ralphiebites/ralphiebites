@@ -1,23 +1,30 @@
+
 <%- include ('../partials/header') %>
 <%- include ('../partials/menu') %>
 
 <link href="../resources/css/nav-bar.css" rel="stylesheet">
 <link href="../resources/css/carousel.css" rel="stylesheet">
+<style>
+    /*about_us*/
+    .carousel-inner img {
+        margin: auto;
+    }
+</style>
 <main>
     <div class="container">
-        <h1>About Us</h1>
-        <div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="false" style="width:700px;margin-left:30%">
-            <div class="carousel-indicators">
-              <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Ian"></button>
-              <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Sanjana"></button>
-              <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" aria-label="Annie"></button>
-              <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="3" aria-label="Kavin"></button>
-              <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="4" aria-label="Vraj"></button>
-              <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="5" aria-label="Sriyans"></button>
-            </div>
-            <div class="carousel-inner">
+        <h1><center>About Us</center></h1>
+        <div id="about" class="carousel slide" data-bs-ride="false" style="width:50%;margin-left:0">
+            <!-- <div class="carousel-indicators">
+              <button type="button" data-bs-target="#about" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Ian"></button>
+              <button type="button" data-bs-target="#about" data-bs-slide-to="1" aria-label="Sanjana"></button>
+              <button type="button" data-bs-target="#about" data-bs-slide-to="2" aria-label="Annie"></button>
+              <button type="button" data-bs-target="#about" data-bs-slide-to="3" aria-label="Kavin"></button>
+              <button type="button" data-bs-target="#about" data-bs-slide-to="4" aria-label="Vraj"></button>
+              <button type="button" data-bs-target="#about" data-bs-slide-to="5" aria-label="Sriyans"></button>
+            </div> -->
+            <div class="carousel-inner" style="width:200%; margin:auto" >
               <div class="carousel-item active">
-                <img src="https://htmlcolorcodes.com/assets/images/colors/dark-purple-color-solid-background-1920x1080.png" class="d-block w-100" width="100px" alt="...">
+                <img src="https://htmlcolorcodes.com/assets/images/colors/dark-purple-color-solid-background-1920x1080.png" class="d-block w-100" width="200%" alt="...">
                 <div class="carousel-caption d-none d-md-block">
                   <h5>Ian</h5>
                   <p></p>
@@ -59,11 +66,11 @@
                 </div>
               </div>
             </div>
-            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
+            <button class="carousel-control-prev" type="button" data-bs-target="#about" data-bs-slide="prev">
               <span class="carousel-control-prev-icon" aria-hidden="true" ></span>
               <span class="visually-hidden">Previous</span>
             </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
+            <button class="carousel-control-next" type="button" data-bs-target="#about" data-bs-slide="next" style="margin:-100%">
               <span class="carousel-control-next-icon" aria-hidden="true"></span>
               <span class="visually-hidden">Next</span>
             </button>
