@@ -76,7 +76,13 @@ app.get("/logout", (req, res) => {
 // POST requests
 app.post("/register", async (req, res) => {
     const hash = await bcrypt.hash(req.body.password, 10);
-
+    if(req.body.password != req.body.ConfirmPassword)
+    {
+        res.render("pages/register", {
+            error: true,
+            message: "Wrong confirm password entered.",
+        });
+    }else{
     const query = "INSERT INTO users (username, password) VALUES ($1, $2);";
     db.any(query, [req.body.username, hash])
         .then(function (data) {
@@ -86,6 +92,7 @@ app.post("/register", async (req, res) => {
             res.redirect("/register");
             return console.log(err);
         });
+    }    
 });
 
 app.post("/login", (req, res) => {

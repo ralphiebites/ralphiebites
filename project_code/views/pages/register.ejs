@@ -4,6 +4,12 @@
     <body style = "background-color: burlywood;"></body> 
     <div class="container">
         <form class="w-50 container mt-5" action="/register" method="post">
+            <% if (locals.message) { %>
+                <div class="alert alert-danger alert-dismissible fade show <%- locals.error ? 'visible' : 'invisible' %>" role="alert">
+                    Wrong confirm password entered.
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            <% } %>
             <h1 class="mb-4" style=" color: #030303; font-size: 85px; Letter-spacing: 5px; border-radius: 5px; width: 400px  ;" >Register</h1>
             <div class="form-row" style="display: flex; justify-content: space-between;">
                 <div class="form-group col-md-6 "  >
@@ -29,7 +35,7 @@
             </div>
             <div class="form-group">
                 <label for="inputAddress2" style="text-align: center; font-size: 15px; text-transform: uppercase; color: #030303; Letter-spacing: 5px; font-weight: 700; ">Confirm Password</label>
-                <input type="password" class="form-control" id="inputReEnterPassword" placeholder="Re-Enter Password" >
+                <input type="password" class="form-control" id="ConfirmPassword" name= "ConfirmPassword" placeholder="Re-Enter Password" >
             </div>    
             <hr>
             <div class="d-flex justify-content-between">
