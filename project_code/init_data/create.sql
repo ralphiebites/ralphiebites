@@ -1,5 +1,11 @@
 DROP TABLE IF EXISTS users CASCADE;
 CREATE TABLE users(
-    username VARCHAR(50) PRIMARY KEY,
-    password CHAR(60) NOT NULL
+    student_id VARCHAR(8) PRIMARY KEY,
+    username VARCHAR(50),
+    password CHAR(60) NOT NULL,
+    first_name VARCHAR(50),
+    last_name VARCHAR(50),
+    email VARCHAR(50),
+    meals_request INT NOT NULL,
+    meals_given INT NOT NULL
 );
