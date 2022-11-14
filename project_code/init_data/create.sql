@@ -9,10 +9,3 @@ CREATE TABLE users(
     meals_request INT NOT NULL,
     meals_given INT NOT NULL
 );
-
-CREATE TABLE transactions(
-    transaction_id INT PRIMARY KEY,
-    requester VARCHAR(50),
-    sender VARCHAR(50),
-    meals_count INT
-)
