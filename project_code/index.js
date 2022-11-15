@@ -77,6 +77,19 @@ app.get("/logout", (req, res) => {
     res.render("pages/login");
 });
 
+app.get("/give", (req, res) => {
+    const query = 'SELECT accountID FROM users WHERE username = $1;';
+    db.any(query, [req.body.username])
+        .then(function (data) {
+            user.accountID = data.accountID;
+        })
+        .catch(function(err) {
+            return console.log(err);
+        })
+
+    transactions[user.accountID] = 0;
+});
+
 // POST requests
 app.post("/register", async (req, res) => {
     const hash = await bcrypt.hash(req.body.password, 10);
