@@ -6,10 +6,11 @@
         <form class="w-50 container mt-5" action="/register" method="post">
             <% if (locals.message) { %>
                 <div class="alert alert-danger alert-dismissible fade show <%- locals.error ? 'visible' : 'invisible' %>" role="alert">
-                    Wrong confirm password entered.
+                   <%= locals.message %>
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
             <% } %>
+            <!-- <img src="../../resources/img/swipLogo.jpg" alt = "Logo;"></img> -->
             <h1 class="mb-4" style=" color: #030303; font-size: 85px; Letter-spacing: 5px; border-radius: 5px; width: 400px  ;" >Register</h1>
             <div class="form-row" style="display: flex; justify-content: space-between;">
                 <div class="form-group col-md-6 "  >
@@ -23,7 +24,7 @@
             </div>
             <div class="form-group">
                 <label  for="inputAddress" style="text-align: center; font-size: 15px; text-transform: uppercase; color: #030303; Letter-spacing: 5px; font-weight: 700; ">Email</label>
-                <input type="email" class="form-control" id="inputEmail" placeholder="email@colorado.edu">
+                <input type="email" class="form-control" id="inputEmail" name="email" placeholder="email@colorado.edu">
             </div>
             <div class="form-group">
                 <label for="username" style="text-align: center; font-size: 15px; text-transform: uppercase; color: #030303; Letter-spacing: 5px; font-weight: 700; " class="form-label me-5">Username</label>
