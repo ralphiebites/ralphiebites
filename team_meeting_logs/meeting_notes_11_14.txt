@@ -1,0 +1,15 @@
+THIRD MEETING (November 14th, 2022 6:15PM)
+- Covered what we have done since last meeting
+    - Each of us did at least one story who had one assigned
+- Advised to more carefully follow the rubric
+    - This includes the following:
+        - Weekly release notes with description of what happened during the past week
+        - Submit weekly meeting notes to appropriate folder
+        - Track times met throughout week
+- Advised to redirect project focus away from third party API and use dummy data instead
+    - This should allow us to have a working version of our app by the end of the week 
+    - However, we can integrate the third party API later if we have time
+- What needs to be completed this week
+    - A full prototype of the website (without third-party API integration)
+        - Completion of all pages in wire frame
+        - Completion of all backend API routes
