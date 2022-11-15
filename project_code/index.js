@@ -97,7 +97,6 @@ app.post("/login", (req, res) => {
     db.one(query, [req.body.username])
         .then(async function (user) {
             const match = await bcrypt.compare(req.body.password, user.password);
-
             if (match) {
                 req.session.user = {
                     api_key: process.env.API_KEY,

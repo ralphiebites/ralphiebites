@@ -1,34 +1,29 @@
 <%- include ('../partials/header') %>
-<%- include ('../partials/menu') %>
-
-<!-- <main>
-    <div class="container">
-        <h1>Account</h1>
-    </div>
-</main> -->
-
-<!-- <main>
-    <div class="container">
-    <!-- THE REST OF YOUR HTML CODE GOES HERE -->
-      <form action="/delete_user" method="post">
-          <!-- Email Address
-          <div class="col-md-4">
-              <label for="Email" class="form-label">Email</label>
-              <input type="email" class="form-control" id="validationDefault01" name="email" value="Enter your email" required>
-              <small style="color: grey;" class="w-100">We'll never share your email with anyone else.</small>
-          </div> -->
-           <!-- User name -->
-           <div class="col-md-4">
-              <label for="text" class="form-label">Username</label>
-              <input type="text" class="form-control" id="validationDefault01" name="username" value="Enter your User Name" required>
-              <small style="color: grey;" class="w-100">We'll never share your information with anyone else.</small>
-          </div>
-          <div class="col-md-12">
-              <button class="btn btn-primary" type="submit">Delete</button>
-          </div>
-      </form>
-      <!-- FORM END-->
-    </div>
-</main>
-
+    <%- include ('../partials/menu') %>
+        <main>
+            <body style="background-color: burlywood;"></body>
+            <div class="container">
+                <!-- THE REST OF YOUR HTML CODE GOES HERE -->
+                <form action="/delete_user" method="post">
+                    <% if (locals.message) { %>
+                        <div class="alert alert-danger alert-dismissible fade show <%- locals.error ? 'visible' : 'invisible' %>" role="alert">
+                            We don't have your username!
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    <% } %>
+                    <!-- Email Address-->
+                    <div class="col-md-4">
+                        <label for="text" class="form-label" style="font-size: 15px; text-transform: uppercase; color: #030303; font-weight: 700;">Username</label>
+                        <input type="text" class="form-control" id="validationDefault01" placeholder="e.g. RalphieBuffalo" name="username"
+                            value="Enter your User Name" required >
+                        <small style="color: black;" class="w-100">We'll never share your information with anyone
+                            else.</small>
+                    </div>
+                    <div class="col-md-12">
+                        <button class="btn btn-primary" type="submit" style="padding: 10px 300px; margin: 10px 5px;">Delete</button>
+                    </div>
+                </form>
+                <!-- FORM END-->
+            </div>
+        </main>
 <%- include ('../partials/footer') %>
