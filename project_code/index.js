@@ -77,7 +77,7 @@ app.get("/logout", (req, res) => {
     res.render("pages/login");
 });
 
-app.get("/give", (req, res) => {
+app.get("/get", (req, res) => {
     const query = 'SELECT accountID FROM users WHERE username = $1;';
     db.any(query, [req.body.username])
         .then(function (data) {
@@ -87,7 +87,7 @@ app.get("/give", (req, res) => {
             return console.log(err);
         })
 
-    transactions[user.accountID] = 0;
+    transactions[user.accountID] = 1;
 });
 
 // POST requests
