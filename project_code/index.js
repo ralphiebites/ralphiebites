@@ -105,11 +105,33 @@ function match()
     return false;    
 }
 
-app.get("/give", (req, res) => {
-    const query = 'SELECT accountID FROM users WHERE username = $1;';
+app.get("/get", (req, res) => {
+    const query = 'SELECT student_id FROM users WHERE username = $1;';
     db.any(query, [req.body.username])
         .then(function (data) {
-            let accountID = data.accountID;
+            let accountID = data.student_id;
+            // let transactions; 
+            transactions[accountID] =  {"action": "get", "mealsRemaining": 10}; 
+            console.log(transactions[accountID]["action"]); // should print give 
+            let transactionSuccess = match();
+            if(transactionSuccess)
+            {
+                console.log("Success");
+            }else{
+                console.log("fail"); 
+            }  
+                      
+        })
+        .catch(function(err) {
+            return console.log(err);
+        })
+});
+
+app.get("/give", (req, res) => {
+    const query = 'SELECT student_id FROM users WHERE username = $1;';
+    db.any(query, [req.body.username])
+        .then(function (data) {
+            let accountID = data.student_id;
             // let transactions; 
             transactions[accountID] =  {"action": "give", "mealsRemaining": 10}; 
             console.log(transactions[accountID]["action"]); // should print give 
@@ -127,21 +149,60 @@ app.get("/give", (req, res) => {
         })
 });
 
-
-
 // POST requests
 app.post("/register", async (req, res) => {
     const hash = await bcrypt.hash(req.body.password, 10);
-
-    const query = "INSERT INTO users (username, password) VALUES ($1, $2);";
-    db.any(query, [req.body.username, hash])
-        .then(function (data) {
-            res.redirect("/login");
-        })
-        .catch(function (err) {
-            res.redirect("/register");
-            return console.log(err);
+    let email = req.body.email; 
+    console.log(email);
+    const myArray = email.split("@");
+    console.log(myArray);
+    console.log(!myArray[1].localeCompare( "colorado.edu"));
+    let errmsg = "err:";
+    let flag = -1;
+    if(req.body.password && req.body.email)
+    {
+        //console.log(req.body.password)
+        if(req.body.password != req.body.ConfirmPassword)
+        {
+            errmsg = "Wrong confirm password entered.";
+            flag = 0;
+        }
+        if(!(myArray[1].localeCompare( "colorado.edu") == 0))
+        {
+            console.log(myArray[1]);
+            errmsg += " Email has to be colorado.edu."; 
+            flag = 0;
+        }
+        if(flag == -1)
+        {
+            const query = "INSERT INTO users (username, password) VALUES ($1, $2);";
+            db.any(query, [req.body.username, hash])
+            .then(function () {
+                console.log('success');
+                res.render("pages/login");
+            })
+            .catch(function (err) {
+                console.log(err);
+                res.redirect("/register");
+                return "Error registering";
+                // return console.log(err);
+            });
+        }else{
+            console.log(errmsg)
+            res.render("pages/register", {
+            error: true,
+            message: errmsg,
         });
+        } 
+
+    }else{
+        // console.log("enter");
+        console.log(errmsg)
+        res.render("pages/register", {
+            error: true,
+            message: "Didn't enter.",
+        });
+    }    
 });
 
 app.post("/login", (req, res) => {

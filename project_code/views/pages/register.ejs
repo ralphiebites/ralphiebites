@@ -1,17 +1,43 @@
 <%- include ('../partials/header') %>
 
 <main>
+    <body style = "background-color: burlywood;"></body> 
     <div class="container">
         <form class="w-50 container mt-5" action="/register" method="post">
-            <h1 class="mb-4">Register</h1>
-            <div class="d-flex justify-content-between mb-3">
-                <label for="username" class="form-label me-5">Username</label>
-                <input type="text" class="form-control" id="username" name="username">
+            <% if (locals.message) { %>
+                <div class="alert alert-danger alert-dismissible fade show <%- locals.error ? 'visible' : 'invisible' %>" role="alert">
+                   <%= locals.message %>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            <% } %>
+            <!-- <img src="../../resources/img/swipLogo.jpg" alt = "Logo;"></img> -->
+            <h1 class="mb-4" style=" color: #030303; font-size: 85px; Letter-spacing: 5px; border-radius: 5px; width: 400px  ;" >Register</h1>
+            <div class="form-row" style="display: flex; justify-content: space-between;">
+                <div class="form-group col-md-6 "  >
+                    <label for="text" style="text-align: center; font-size: 15px; text-transform: uppercase; color: #030303; Letter-spacing: 5px; font-weight: 700; ">First Name</label>
+                    <input type="text" class="form-control" id="inputFirstName" placeholder="e.g. Ralphie">
+                </div>
+                <div class="form-group col-md-6">
+                    <label  for="text" style="text-align: center; font-size: 15px; text-transform: uppercase; color: #030303; Letter-spacing: 5px; font-weight: 700; ">Last Name</label>
+                    <input type="text" class="form-control" id="inputLastName" placeholder="e.g. The Buffalo">
+                </div>
             </div>
-            <div class="d-flex justify-content-between mb-3">
-                <label for="password" class="form-label me-5">Password</label>
-                <input type="password" class="form-control" id="password" name="password">
+            <div class="form-group">
+                <label  for="inputAddress" style="text-align: center; font-size: 15px; text-transform: uppercase; color: #030303; Letter-spacing: 5px; font-weight: 700; ">Email</label>
+                <input type="email" class="form-control" id="inputEmail" name="email" placeholder="email@colorado.edu">
             </div>
+            <div class="form-group">
+                <label for="username" style="text-align: center; font-size: 15px; text-transform: uppercase; color: #030303; Letter-spacing: 5px; font-weight: 700; " class="form-label me-5">Username</label>
+                <input type="text" class="form-control" id="username" name="username" placeholder="Username">
+            </div>
+            <div class="form-group">
+                <label for="password" style="text-align: center; font-size: 15px; text-transform: uppercase; color: #030303; Letter-spacing: 5px; font-weight: 700; "class="form-label me-5">Password</label>
+                <input type="password" class="form-control" id="password" name="password" placeholder="Password" >
+            </div>
+            <div class="form-group">
+                <label for="inputAddress2" style="text-align: center; font-size: 15px; text-transform: uppercase; color: #030303; Letter-spacing: 5px; font-weight: 700; ">Confirm Password</label>
+                <input type="password" class="form-control" id="ConfirmPassword" name= "ConfirmPassword" placeholder="Re-Enter Password" >
+            </div>    
             <hr>
             <div class="d-flex justify-content-between">
                 <p>Already have an account? <a href="/login">Login</a></p>
