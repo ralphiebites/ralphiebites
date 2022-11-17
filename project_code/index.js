@@ -81,6 +81,7 @@ app.get("/logout", (req, res) => {
 app.post("/register", async (req, res) => {
     const hash = await bcrypt.hash(req.body.password, 10);
     let email = req.body.email; 
+    console.log(email);
     const myArray = email.split("@");
     console.log(myArray);
     console.log(!myArray[1].localeCompare( "colorado.edu"));

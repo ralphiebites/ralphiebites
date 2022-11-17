@@ -5,7 +5,7 @@ CREATE TABLE users(
     password CHAR(60) NOT NULL,
     first_name VARCHAR(50),
     last_name VARCHAR(50),
-    email VARCHAR(50),
+    email VARCHAR(50)
 );
 
 CREATE TABLE transactions(
@@ -13,4 +13,4 @@ CREATE TABLE transactions(
     requester VARCHAR(50),
     sender VARCHAR(50),
     meals_count INT
-)
+);
