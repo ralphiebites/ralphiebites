@@ -1,0 +1,10 @@
+SECOND MEETING (November 7th, 2022 6:15PM - 15 minute meeting, 1 hour group meeting before)
+- Covered what we had done since the last meeting
+- Discussed organizational strategy for user stories
+- Told to work on assigning tasks as well as making sure work load is evenly distributed
+    - Advised that we can user story points to track story difficult and divide tasks accordingly
+- What to do before next meeting
+    - Transition stories we plan to work on to the "To-do"/"In progress" sections as we do them
+    - Each person complete at least one user story
+    - Assign story points to each story
+    - Add assignees to each story
