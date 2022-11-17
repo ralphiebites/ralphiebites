@@ -106,10 +106,10 @@ function match()
 }
 
 app.get("/get", (req, res) => {
-    const query = 'SELECT accountID FROM users WHERE username = $1;';
+    const query = 'SELECT student_id FROM users WHERE username = $1;';
     db.any(query, [req.body.username])
         .then(function (data) {
-            let accountID = data.accountID;
+            let accountID = data.student_id;
             // let transactions; 
             transactions[accountID] =  {"action": "get", "mealsRemaining": 10}; 
             console.log(transactions[accountID]["action"]); // should print give 
@@ -127,7 +127,27 @@ app.get("/get", (req, res) => {
         })
 });
 
-
+app.get("/give", (req, res) => {
+    const query = 'SELECT student_id FROM users WHERE username = $1;';
+    db.any(query, [req.body.username])
+        .then(function (data) {
+            let accountID = data.student_id;
+            // let transactions; 
+            transactions[accountID] =  {"action": "give", "mealsRemaining": 10}; 
+            console.log(transactions[accountID]["action"]); // should print give 
+            let transactionSuccess = match();
+            if(transactionSuccess)
+            {
+                console.log("Success");
+            }else{
+                console.log("fail"); 
+            }  
+                      
+        })
+        .catch(function(err) {
+            return console.log(err);
+        })
+});
 
 // POST requests
 app.post("/register", async (req, res) => {
