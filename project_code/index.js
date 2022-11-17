@@ -112,7 +112,7 @@ app.get("/give", (req, res) => {
             let accountID = data.accountID;
             // let transactions; 
             transactions[accountID] =  {"action": "give", "mealsRemaining": 10}; 
-            console.log(transactions[1234]["action"]); // should print give 
+            console.log(transactions[accountID]["action"]); // should print give 
             let transactionSuccess = match();
             if(transactionSuccess)
             {
