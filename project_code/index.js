@@ -6,6 +6,8 @@ const session = require("express-session");
 const bcrypt = require("bcrypt");
 const axios = require("axios");
 
+let transactions = {}; // global variable 
+
 // Database configuration
 const dbConfig = {
     host: "db",
@@ -77,18 +79,55 @@ app.get("/logout", (req, res) => {
     res.render("pages/login");
 });
 
+function match()
+{
+    for (let key in transactions) { // iterate over accountID
+        if(transactions[key]["action"] == "get")
+        {
+            for(let key2 in transactions)
+            {
+                if(transactions[key2]["action"] == "give")
+                {
+                    transactions[key]["mealsRemaining"] += 1; // increase meal
+                    transactions[key2]["mealsRemaining"] -= 1; // decreasee meal
+
+                    // after transaction is done set action to none
+                    transactions[key]["action"] = "none"; 
+                    transactions[key2]["action"] = "none";
+
+                    return true; // know the transactions happened
+
+                }
+            }
+        }
+
+    }
+    return false;    
+}
+
 app.get("/get", (req, res) => {
     const query = 'SELECT accountID FROM users WHERE username = $1;';
     db.any(query, [req.body.username])
         .then(function (data) {
-            user.accountID = data.accountID;
+            let accountID = data.accountID;
+            // let transactions; 
+            transactions[accountID] =  {"action": "get", "mealsRemaining": 10}; 
+            console.log(transactions[1234]["action"]); // should print give 
+            let transactionSuccess = match();
+            if(transactionSuccess)
+            {
+                console.log("Success");
+            }else{
+                console.log("fail"); 
+            }  
+                      
         })
         .catch(function(err) {
             return console.log(err);
         })
-
-    transactions[user.accountID] = 1;
 });
+
+
 
 // POST requests
 app.post("/register", async (req, res) => {
