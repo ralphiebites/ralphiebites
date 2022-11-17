@@ -6,6 +6,8 @@ const session = require("express-session");
 const bcrypt = require("bcrypt");
 const axios = require("axios");
 
+let transactions = {}; // global variable 
+
 // Database configuration
 const dbConfig = {
     host: "db",
@@ -75,6 +77,76 @@ app.get("/about_us", async (req, res) => {
 app.get("/logout", (req, res) => {
     req.session.destroy();
     res.render("pages/login");
+});
+
+function match()
+{
+    for (let key in transactions) { // iterate over accountID
+        if(transactions[key]["action"] == "get")
+        {
+            for(let key2 in transactions)
+            {
+                if(transactions[key2]["action"] == "give")
+                {
+                    transactions[key]["mealsRemaining"] += 1; // increase meal
+                    transactions[key2]["mealsRemaining"] -= 1; // decreasee meal
+
+                    // after transaction is done set action to none
+                    transactions[key]["action"] = "none"; 
+                    transactions[key2]["action"] = "none";
+
+                    return true; // know the transactions happened
+
+                }
+            }
+        }
+
+    }
+    return false;    
+}
+
+app.get("/get", (req, res) => {
+    const query = 'SELECT student_id FROM users WHERE username = $1;';
+    db.any(query, [req.body.username])
+        .then(function (data) {
+            let accountID = data.student_id;
+            // let transactions; 
+            transactions[accountID] =  {"action": "get", "mealsRemaining": 10}; 
+            console.log(transactions[accountID]["action"]); // should print give 
+            let transactionSuccess = match();
+            if(transactionSuccess)
+            {
+                console.log("Success");
+            }else{
+                console.log("fail"); 
+            }  
+                      
+        })
+        .catch(function(err) {
+            return console.log(err);
+        })
+});
+
+app.get("/give", (req, res) => {
+    const query = 'SELECT student_id FROM users WHERE username = $1;';
+    db.any(query, [req.body.username])
+        .then(function (data) {
+            let accountID = data.student_id;
+            // let transactions; 
+            transactions[accountID] =  {"action": "give", "mealsRemaining": 10}; 
+            console.log(transactions[accountID]["action"]); // should print give 
+            let transactionSuccess = match();
+            if(transactionSuccess)
+            {
+                console.log("Success");
+            }else{
+                console.log("fail"); 
+            }  
+                      
+        })
+        .catch(function(err) {
+            return console.log(err);
+        })
 });
 
 // POST requests
