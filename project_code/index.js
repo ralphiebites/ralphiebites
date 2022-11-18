@@ -63,6 +63,8 @@ app.get("/market", async (req, res) => {
 });
 
 app.get("/account", async (req, res) => {
+    const query = 'SELECT * FROM users WHERE student_id = $1;';
+    
     res.render('pages/account');
 });
 
