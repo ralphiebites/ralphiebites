@@ -210,8 +210,8 @@ app.post("/register", async (req, res) => {
             flag = 0;
         }
         if (flag == -1) {
-            const query = "INSERT INTO users (username, password) VALUES ($1, $2);";
-            db.any(query, [req.body.username, hash])
+            const query = "INSERT INTO users (username, password, first_name, last_name, email) VALUES ($1, $2, $3, $4, $5);";
+            db.any(query, [req.body.username, hash, req.body.first_name, req.body.last_name, email])
                 .then(function () {
                     console.log('success');
                     res.render("pages/login");
