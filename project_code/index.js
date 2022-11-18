@@ -6,7 +6,33 @@ const session = require("express-session");
 const bcrypt = require("bcrypt");
 const axios = require("axios");
 
-let transactions = {}; // global variable 
+let transactions = {
+    'jopt6529': {
+        'action': 'give',
+        'mealsRemaining': 5
+    },
+    'pasm9872': {
+        'action': 'get',
+        'mealsRemaining': 9
+    },
+    'sejk5632': {
+        'action': 'get',
+        'mealsRemaining': 3
+    },
+    'rikl4432': {
+        'action': 'none',
+        'mealsRemaining': 0
+    },
+    'benw1783': {
+        'action': 'none',
+        'mealsRemaining': 19
+    },
+    'lojf5934': {
+        'action': 'give',
+        'mealsRemaining': 19
+    }
+}; // Filled with example data
+
 
 // Database configuration
 const dbConfig = {
@@ -94,7 +120,6 @@ function match() {
                     transactions[key2]["action"] = "none";
 
                     return true; // know the transactions happened
-
                 }
             }
         }
@@ -103,19 +128,34 @@ function match() {
     return false;
 }
 
+function inTransactions(accountID) {
+    for (let key in transactions) {
+        if (key == accountID) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 app.get("/get", (req, res) => {
     const query = 'SELECT student_id FROM users WHERE username = $1;';
     db.any(query, [req.body.username])
         .then(function (data) {
             let accountID = data.student_id;
-            // let transactions; 
-            transactions[accountID] = { "action": "get", "mealsRemaining": 10 };
-            console.log(transactions[accountID]["action"]); // should print give 
+
+            if (inTransactions(accountID)) {
+                transactions[accountID] = { "action": "get", "mealsRemaining": transactions[accountID]["mealsRemaining"] };
+            } else {
+                transactions[accountID] = { "action": "get", "mealsRemaining": 19 };
+            }
+
             let transactionSuccess = match();
+
             if (transactionSuccess) {
                 console.log("Success");
             } else {
-                console.log("fail");
+                console.log("Fail");
             }
 
         })
@@ -129,14 +169,19 @@ app.get("/give", (req, res) => {
     db.any(query, [req.body.username])
         .then(function (data) {
             let accountID = data.student_id;
-            // let transactions; 
-            transactions[accountID] = { "action": "give", "mealsRemaining": 10 };
-            console.log(transactions[accountID]["action"]); // should print give 
-            let transactionSuccess = match();
-            if (transactionSuccess) {
-                console.log("Success");
+
+            if (inTransactions(accountID)) {
+                transactions[accountID] = { "action": "give", "mealsRemaining": transactions[accountID]["mealsRemaining"] };
             } else {
-                console.log("fail");
+                transactions[accountID] = { "action": "give", "mealsRemaining": 19 };
+            }
+
+            let transactionSuccess = match();
+
+            if (transactionSuccess) {
+                console.log("Transaction success!");
+            } else {
+                console.log("Transaction fail!");
             }
 
         })
@@ -167,8 +212,8 @@ app.post("/register", async (req, res) => {
             flag = 0;
         }
         if (flag == -1) {
-            const query = "INSERT INTO users (username, password) VALUES ($1, $2);";
-            db.any(query, [req.body.username, hash])
+            const query = "INSERT INTO users (username, password, first_name, last_name, email) VALUES ($1, $2, $3, $4, $5);";
+            db.any(query, [req.body.username, hash, req.body.first_name, req.body.last_name, email])
                 .then(function () {
                     console.log('success');
                     res.render("pages/login");
