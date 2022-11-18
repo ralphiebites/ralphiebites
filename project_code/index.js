@@ -79,20 +79,16 @@ app.get("/logout", (req, res) => {
     res.render("pages/login");
 });
 
-function match()
-{
+function match() {
     for (let key in transactions) { // iterate over accountID
-        if(transactions[key]["action"] == "get")
-        {
-            for(let key2 in transactions)
-            {
-                if(transactions[key2]["action"] == "give")
-                {
+        if (transactions[key]["action"] == "get") {
+            for (let key2 in transactions) {
+                if (transactions[key2]["action"] == "give") {
                     transactions[key]["mealsRemaining"] += 1; // increase meal
                     transactions[key2]["mealsRemaining"] -= 1; // decreasee meal
 
                     // after transaction is done set action to none
-                    transactions[key]["action"] = "none"; 
+                    transactions[key]["action"] = "none";
                     transactions[key2]["action"] = "none";
 
                     return true; // know the transactions happened
@@ -102,7 +98,7 @@ function match()
         }
 
     }
-    return false;    
+    return false;
 }
 
 app.get("/get", (req, res) => {
@@ -111,18 +107,17 @@ app.get("/get", (req, res) => {
         .then(function (data) {
             let accountID = data.student_id;
             // let transactions; 
-            transactions[accountID] =  {"action": "get", "mealsRemaining": 10}; 
+            transactions[accountID] = { "action": "get", "mealsRemaining": 10 };
             console.log(transactions[accountID]["action"]); // should print give 
             let transactionSuccess = match();
-            if(transactionSuccess)
-            {
+            if (transactionSuccess) {
                 console.log("Success");
-            }else{
-                console.log("fail"); 
-            }  
-                      
+            } else {
+                console.log("fail");
+            }
+
         })
-        .catch(function(err) {
+        .catch(function (err) {
             return console.log(err);
         })
 });
@@ -133,18 +128,17 @@ app.get("/give", (req, res) => {
         .then(function (data) {
             let accountID = data.student_id;
             // let transactions; 
-            transactions[accountID] =  {"action": "give", "mealsRemaining": 10}; 
+            transactions[accountID] = { "action": "give", "mealsRemaining": 10 };
             console.log(transactions[accountID]["action"]); // should print give 
             let transactionSuccess = match();
-            if(transactionSuccess)
-            {
+            if (transactionSuccess) {
                 console.log("Success");
-            }else{
-                console.log("fail"); 
-            }  
-                      
+            } else {
+                console.log("fail");
+            }
+
         })
-        .catch(function(err) {
+        .catch(function (err) {
             return console.log(err);
         })
 });
@@ -152,57 +146,53 @@ app.get("/give", (req, res) => {
 // POST requests
 app.post("/register", async (req, res) => {
     const hash = await bcrypt.hash(req.body.password, 10);
-    let email = req.body.email; 
+    let email = req.body.email;
     console.log(email);
     const myArray = email.split("@");
     console.log(myArray);
-    console.log(!myArray[1].localeCompare( "colorado.edu"));
+    console.log(!myArray[1].localeCompare("colorado.edu"));
     let errmsg = "err:";
     let flag = -1;
-    if(req.body.password && req.body.email)
-    {
+    if (req.body.password && req.body.email) {
         //console.log(req.body.password)
-        if(req.body.password != req.body.ConfirmPassword)
-        {
+        if (req.body.password != req.body.ConfirmPassword) {
             errmsg = "Wrong confirm password entered.";
             flag = 0;
         }
-        if(!(myArray[1].localeCompare( "colorado.edu") == 0))
-        {
+        if (!(myArray[1].localeCompare("colorado.edu") == 0)) {
             console.log(myArray[1]);
-            errmsg += " Email has to be colorado.edu."; 
+            errmsg += " Email has to be colorado.edu.";
             flag = 0;
         }
-        if(flag == -1)
-        {
+        if (flag == -1) {
             const query = "INSERT INTO users (username, password) VALUES ($1, $2);";
             db.any(query, [req.body.username, hash])
-            .then(function () {
-                console.log('success');
-                res.render("pages/login");
-            })
-            .catch(function (err) {
-                console.log(err);
-                res.redirect("/register");
-                return "Error registering";
-                // return console.log(err);
-            });
-        }else{
+                .then(function () {
+                    console.log('success');
+                    res.render("pages/login");
+                })
+                .catch(function (err) {
+                    console.log(err);
+                    res.redirect("/register");
+                    return "Error registering";
+                    // return console.log(err);
+                });
+        } else {
             console.log(errmsg)
             res.render("pages/register", {
-            error: true,
-            message: errmsg,
-        });
-        } 
+                error: true,
+                message: errmsg,
+            });
+        }
 
-    }else{
+    } else {
         // console.log("enter");
         console.log(errmsg)
         res.render("pages/register", {
             error: true,
             message: "Didn't enter.",
         });
-    }    
+    }
 });
 
 app.post("/login", (req, res) => {
