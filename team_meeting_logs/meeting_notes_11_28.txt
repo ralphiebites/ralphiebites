@@ -1,0 +1,14 @@
+FOURTH MEETING (November 28th, 2022 6:15PM - 15 minute meeting, 1 hour group meeting before)
+- Covered what we have done since last meeting
+    - Worked on indidvual tasks and completed practial application
+- Advised to work on presentations
+    - Going on project guide, and follow syllabus
+    - https://cuboulder-csci-3308.herokuapp.com/project
+- Advised to get branches combined and working
+- What needs to be completed this week
+    - Merging of everyones branches to main branch
+        - Resolving indidvual merge conflicts
+        - Setting one primary key for table as username instead of student_id
+        - Possibly changing from dummy data to GET API inclduing all requirements (e.g. buff username/password checking + live meal plan count)
+
+

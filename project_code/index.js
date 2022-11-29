@@ -6,33 +6,7 @@ const session = require("express-session");
 const bcrypt = require("bcrypt");
 const axios = require("axios");
 
-let transactions = {
-    'jopt6529': {
-        'action': 'give',
-        'mealsRemaining': 5
-    },
-    'pasm9872': {
-        'action': 'get',
-        'mealsRemaining': 9
-    },
-    'sejk5632': {
-        'action': 'get',
-        'mealsRemaining': 3
-    },
-    'rikl4432': {
-        'action': 'none',
-        'mealsRemaining': 0
-    },
-    'benw1783': {
-        'action': 'none',
-        'mealsRemaining': 19
-    },
-    'lojf5934': {
-        'action': 'give',
-        'mealsRemaining': 19
-    }
-}; // Filled with example data
-
+let transactions = {}; // global variable 
 
 // Database configuration
 const dbConfig = {
@@ -247,13 +221,12 @@ app.post("/login", (req, res) => {
     db.one(query, [req.body.username])
         .then(async function (user) {
             const match = await bcrypt.compare(req.body.password, user.password);
-
             if (match) {
                 req.session.user = {
                     api_key: process.env.API_KEY,
+                    username: req.body.username,
                 };
                 req.session.save();
-
                 res.redirect("/market");
             } else {
                 res.render("pages/login", {
@@ -280,6 +253,122 @@ const auth = (req, res, next) => {
 
 // Authentication required
 app.use(auth);
+
+app.get("/market", async (req, res) => {
+    res.render('pages/market');
+});
+
+app.get("/account", async (req, res) => {
+    const query = 'SELECT * FROM users WHERE username = $1;';
+    db.one(query, [req.session.user.username])
+    .then(function (data) {
+        res.render('pages/account',
+        {
+            username: data.username,
+            first_name: data.first_name,
+            last_name: data.last_name,
+            email: data.email,
+        });
+    })
+    .catch(function (err) {
+        return console.log(err);
+    })
+});
+
+app.get("/settings", async (req, res) => {
+    res.render('pages/settings');
+});
+
+app.get("/about_us", async (req, res) => {
+    res.render('pages/about_us');
+});
+
+app.get("/logout", (req, res) => {
+    req.session.destroy();
+    res.render("pages/login",{
+
+
+    });
+});
+
+function match() {
+    for (let key in transactions) { // iterate over accountID
+        if (transactions[key]["action"] == "get") {
+            for (let key2 in transactions) {
+                if (transactions[key2]["action"] == "give") {
+                    transactions[key]["mealsRemaining"] += 1; // increase meal
+                    transactions[key2]["mealsRemaining"] -= 1; // decreasee meal
+
+                    // after transaction is done set action to none
+                    transactions[key]["action"] = "none";
+                    transactions[key2]["action"] = "none";
+
+                    return true; // know the transactions happened
+
+                }
+            }
+        }
+
+    }
+    return false;
+}
+
+app.get("/get", (req, res) => {
+    const query = 'SELECT student_id FROM users WHERE username = $1;';
+    db.any(query, [req.body.username])
+        .then(function (data) {
+            let accountID = data.student_id;
+            // let transactions; 
+            transactions[accountID] = { "action": "get", "mealsRemaining": 10 };
+            console.log(transactions[accountID]["action"]); // should print give 
+            let transactionSuccess = match();
+            if (transactionSuccess) {
+                console.log("Success");
+            } else {
+                console.log("fail");
+            }
+
+        })
+        .catch(function (err) {
+            return console.log(err);
+        })
+});
+
+app.get("/give", (req, res) => {
+    const query = 'SELECT student_id FROM users WHERE username = $1;';
+    db.any(query, [req.body.username])
+        .then(function (data) {
+            let accountID = data.student_id;
+            // let transactions; 
+            transactions[accountID] = { "action": "give", "mealsRemaining": 10 };
+            console.log(transactions[accountID]["action"]); // should print give 
+            let transactionSuccess = match();
+            if (transactionSuccess) {
+                console.log("Success");
+            } else {
+                console.log("fail");
+            }
+
+        })
+        .catch(function (err) {
+            return console.log(err);
+        })
+});
+
+// Delete Account API Route
+app.post('/delete_user', function (req, res) {
+    const query = 'DELETE FROM users WHERE username=$1';
+    db.any(query, [req.session.user.username])
+      .then(function (data) {
+        req.session.destroy();
+        res.redirect("/register");
+      })
+      .catch(function (err) {
+        return console.log(err);
+      });
+});
+
+
 
 // Listen on port 3000
 app.listen(3000);
