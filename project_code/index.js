@@ -58,6 +58,112 @@ app.get("/register", (req, res) => {
     res.render("pages/register");
 });
 
+app.get("/market", async (req, res) => {
+    res.render('pages/market');
+});
+
+app.get("/account", async (req, res) => {
+    res.render('pages/account');
+});
+
+app.get("/settings", async (req, res) => {
+    res.render('pages/settings');
+});
+
+app.get("/about_us", async (req, res) => {
+    res.render('pages/about_us');
+});
+
+app.get("/logout", (req, res) => {
+    req.session.destroy();
+    res.render("pages/login");
+});
+
+function match() {
+    for (let key in transactions) { // iterate over accountID
+        if (transactions[key]["action"] == "get") {
+            for (let key2 in transactions) {
+                if (transactions[key2]["action"] == "give") {
+                    transactions[key]["mealsRemaining"] += 1; // increase meal
+                    transactions[key2]["mealsRemaining"] -= 1; // decreasee meal
+
+                    // after transaction is done set action to none
+                    transactions[key]["action"] = "none";
+                    transactions[key2]["action"] = "none";
+
+                    return true; // know the transactions happened
+                }
+            }
+        }
+
+    }
+    return false;
+}
+
+function inTransactions(accountID) {
+    for (let key in transactions) {
+        if (key == accountID) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+app.get("/get", (req, res) => {
+    // const query = 'SELECT student_id FROM users WHERE username = $1;';
+    // db.any(query, [req.session.user.username])
+    //     .then(function (data) {
+    //         let accountID = data.student_id;
+            let accountID = req.session.user.username;
+
+            if (inTransactions(accountID)) {
+                transactions[accountID] = { "action": "get", "mealsRemaining": transactions[accountID]["mealsRemaining"] };
+            } else {
+                transactions[accountID] = { "action": "get", "mealsRemaining": 19 };
+            }
+
+            let transactionSuccess = match();
+
+            if (transactionSuccess) {
+                console.log("Success");
+            } else {
+                console.log("Fail");
+            }
+
+        // })
+        // .catch(function (err) {
+        //     return console.log(err);
+        // })
+});
+
+app.get("/give", (req, res) => {
+    // const query = 'SELECT student_id FROM users WHERE username = $1;';
+    // db.any(query, [req.session.user.username])
+    //     .then(function (data) {
+    //         let accountID = data.student_id;
+            let accountID = req.session.user.username;
+
+            if (inTransactions(accountID)) {
+                transactions[accountID] = { "action": "give", "mealsRemaining": transactions[accountID]["mealsRemaining"] };
+            } else {
+                transactions[accountID] = { "action": "give", "mealsRemaining": 19 };
+            }
+
+            let transactionSuccess = match();
+
+            if (transactionSuccess) {
+                console.log("Transaction success!");
+            } else {
+                console.log("Transaction fail!");
+            }
+
+        // })
+        // .catch(function (err) {
+        //     return console.log(err);
+        // })
+});
+
 // POST requests
 app.post("/register", async (req, res) => {
     const hash = await bcrypt.hash(req.body.password, 10);
