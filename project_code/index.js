@@ -137,10 +137,11 @@ function inTransactions(accountID) {
 }
 
 app.get("/get", (req, res) => {
-    const query = 'SELECT student_id FROM users WHERE username = $1;';
-    db.any(query, [req.body.username])
-        .then(function (data) {
-            let accountID = data.student_id;
+    // const query = 'SELECT student_id FROM users WHERE username = $1;';
+    // db.any(query, [req.session.user.username])
+    //     .then(function (data) {
+    //         let accountID = data.student_id;
+            let accountID = req.session.user.username;
 
             if (inTransactions(accountID)) {
                 transactions[accountID] = { "action": "get", "mealsRemaining": transactions[accountID]["mealsRemaining"] };
@@ -156,17 +157,18 @@ app.get("/get", (req, res) => {
                 console.log("Fail");
             }
 
-        })
-        .catch(function (err) {
-            return console.log(err);
-        })
+        // })
+        // .catch(function (err) {
+        //     return console.log(err);
+        // })
 });
 
 app.get("/give", (req, res) => {
-    const query = 'SELECT student_id FROM users WHERE username = $1;';
-    db.any(query, [req.body.username])
-        .then(function (data) {
-            let accountID = data.student_id;
+    // const query = 'SELECT student_id FROM users WHERE username = $1;';
+    // db.any(query, [req.session.user.username])
+    //     .then(function (data) {
+    //         let accountID = data.student_id;
+            let accountID = req.session.user.username;
 
             if (inTransactions(accountID)) {
                 transactions[accountID] = { "action": "give", "mealsRemaining": transactions[accountID]["mealsRemaining"] };
@@ -182,10 +184,10 @@ app.get("/give", (req, res) => {
                 console.log("Transaction fail!");
             }
 
-        })
-        .catch(function (err) {
-            return console.log(err);
-        })
+        // })
+        // .catch(function (err) {
+        //     return console.log(err);
+        // })
 });
 
 // POST requests
