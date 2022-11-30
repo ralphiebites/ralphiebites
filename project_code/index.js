@@ -132,21 +132,13 @@ app.get("/about_us", async (req, res) => {
     res.render('pages/about_us');
 });
 
-app.get("/account", async (req, res) => {
-    const query = 'SELECT * FROM users WHERE username = $1;';
-    db.one(query, [req.session.user.username])
-        .then(function (data) {
-            res.render('pages/account',
-                {
-                    username: data.username,
-                    first_name: data.first_name,
-                    last_name: data.last_name,
-                    email: data.email,
-                });
-        })
-        .catch(function (err) {
-            return console.log(err);
-        })
+app.get("/help", async (req, res) => {
+    res.render('pages/help');
+});
+
+app.get("/logout", (req, res) => {
+    req.session.destroy();
+    res.render("pages/login");
 });
 
 app.get("/get", (req, res) => {
