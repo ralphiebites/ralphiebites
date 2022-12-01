@@ -5,32 +5,8 @@ const bodyParser = require("body-parser");
 const session = require("express-session");
 const bcrypt = require("bcrypt");
 
-let transactions = {
-    'jopt6529': {
-        'action': 'give',
-        'mealsRemaining': 5
-    },
-    'pasm9872': {
-        'action': 'get',
-        'mealsRemaining': 9
-    },
-    'sejk5632': {
-        'action': 'get',
-        'mealsRemaining': 3
-    },
-    'rikl4432': {
-        'action': 'none',
-        'mealsRemaining': 0
-    },
-    'benw1783': {
-        'action': 'none',
-        'mealsRemaining': 19
-    },
-    'lojf5934': {
-        'action': 'give',
-        'mealsRemaining': 19
-    }
-};
+// Express config
+app.use(express.static('resources'));
 
 // Database configuration
 const dbConfig = {
@@ -69,40 +45,7 @@ app.use(
     })
 );
 
-// Helper functions
-function match() {
-    for (let key in transactions) { // iterate over accountID
-        if (transactions[key]["action"] == "get") {
-            for (let key2 in transactions) {
-                if (transactions[key2]["action"] == "give") {
-                    transactions[key]["mealsRemaining"] += 1; // increase meal
-                    transactions[key2]["mealsRemaining"] -= 1; // decreasee meal
-
-                    // after transaction is done set action to none
-                    transactions[key]["action"] = "none";
-                    transactions[key2]["action"] = "none";
-
-                    return true; // know the transactions happened
-
-                }
-            }
-        }
-
-    }
-    return false;
-}
-
-function inTransactions(accountID) {
-    for (let key in transactions) {
-        if (key == accountID) {
-            return true;
-        }
-    }
-
-    return false;
-}
-
-// GET requests
+// Authentication requests
 app.get("/", (req, res) => {
     res.redirect("/login");
 });
@@ -139,6 +82,7 @@ app.post("/register", async (req, res) => {
             db.any(query, [req.body.username, hash, req.body.first_name, req.body.last_name, email])
                 .then(function () {
                     console.log('success');
+                    transactions[req.body.username] = { 'giving': 0, "mealsRemaining": 3 };
                     res.render("pages/login");
                 })
                 .catch(function (err) {
@@ -163,7 +107,6 @@ app.post("/register", async (req, res) => {
     }
 });
 
-
 app.post("/login", (req, res) => {
     const query = "SELECT password FROM users WHERE username = $1;";
     db.one(query, [req.body.username])
@@ -175,7 +118,7 @@ app.post("/login", (req, res) => {
                     username: req.body.username,
                 };
                 req.session.save();
-                res.redirect("/market");
+                res.redirect("/home");
             } else {
                 res.render("pages/login", {
                     error: true,
@@ -191,43 +134,111 @@ app.post("/login", (req, res) => {
         });
 });
 
-
+// Authentication middleware
 const auth = (req, res, next) => {
     if (!req.session.user) {
-        return res.redirect('/register');
+        return res.redirect('/login');
     }
     next();
 };
 app.use(auth);
 
+// Global transactions object
+let transactions = {
+    'jopt6529': {
+        'giving': 1,
+        'mealsRemaining': 6
+    },
+    'pasm9872': {
+        'giving': 1,
+        'mealsRemaining': 18
+    },
+    'sejk5632': {
+        'giving': 2,
+        'mealsRemaining': 3
+    },
+    'rikl4432': {
+        'giving': 0,
+        'mealsRemaining': 0
+    },
+    'benw1783': {
+        'giving': 3,
+        'mealsRemaining': 16
+    },
+    'lojf5934': {
+        'giving': 8,
+        'mealsRemaining': 11
+    }
+};
+
+// Helper functions
+function claimMeal(donor, recipient) {
+    transactions[recipient]['mealsRemaining'] += transactions[donor]['giving'];
+    transactions[donor]['giving'] = 0;
+}
+
+function donateMeal(donor) {
+    transactions[donor]['giving'] += 1;
+    transactions[donor]['mealsRemaining'] -= 1;
+}
+
+async function getDonations() {
+    let donations = [];
+    const query = 'SELECT * FROM users WHERE username = $1;';
+
+    for (let user in transactions) {
+        if (transactions[user]['giving'] > 0) {
+            let donor_info = await db.one(query, [user])
+                .then((data) => {
+                    return {
+                        'username': user,
+                        'first_name': data.first_name,
+                        'last_name': data.last_name,
+                        'donating': transactions[user]['giving']
+                    };
+                })
+                .catch((err) => {
+                    return console.log(err);
+                })
+
+            donations.push(donor_info);
+        }
+    }
+
+    return donations;
+}
+
+// GET requests
+app.get("/home", async (req, res) => {
+    res.render('pages/home');
+});
+
+app.get("/market", async (req, res) => {
+    let donations = await getDonations();
+
+    res.render('pages/market',
+        {
+            user_meals: transactions[req.session.user.username]['mealsRemaining'],
+            donations: donations
+        });
+});
+
 app.get("/account", async (req, res) => {
     const query = 'SELECT * FROM users WHERE username = $1;';
     db.one(query, [req.session.user.username])
-    .then(function (data) {
-        res.render('pages/account',
-        {
-            username: data.username,
-            first_name: data.first_name,
-            last_name: data.last_name,
-            email: data.email,
-        });
-    })
-    .catch(function (err) {
-        return console.log(err);
-    })
-});
-
-
-app.get("/market", async (req, res) => {
-    res.render('pages/market');
-});
-
-app.get("/settings", async (req, res) => {
-    res.render('pages/settings');
-});
-
-app.get("/about_us", async (req, res) => {
-    res.render('pages/about_us');
+        .then(function (data) {
+            res.render('pages/account',
+                {
+                    username: data.username,
+                    first_name: data.first_name,
+                    last_name: data.last_name,
+                    email: data.email,
+                    meals: transactions[data.username]['mealsRemaining']
+                });
+        })
+        .catch(function (err) {
+            return console.log(err);
+        })
 });
 
 app.get("/help", async (req, res) => {
@@ -239,43 +250,30 @@ app.get("/logout", (req, res) => {
     res.render("pages/login");
 });
 
-app.get("/get", (req, res) => {
-    let accountID = req.session.user.username;
-
-    if (inTransactions(accountID)) {
-        transactions[accountID] = { "action": "get", "mealsRemaining": transactions[accountID]["mealsRemaining"] };
-    } else {
-        transactions[accountID] = { "action": "get", "mealsRemaining": 19 };
-    }
-
-    let transactionSuccess = match();
-
-    if (transactionSuccess) {
-        console.log("Success");
-    } else {
-        console.log("Fail");
-    }
-});
-
-app.get("/give", (req, res) => {
-    let accountID = req.session.user.username;
-
-    if (inTransactions(accountID)) {
-        transactions[accountID] = { "action": "give", "mealsRemaining": transactions[accountID]["mealsRemaining"] };
-    } else {
-        transactions[accountID] = { "action": "give", "mealsRemaining": 19 };
-    }
-
-    let transactionSuccess = match();
-
-    if (transactionSuccess) {
-        console.log("Transaction success!");
-    } else {
-        console.log("Transaction fail!");
-    }
-});
-
 // POST requests
+app.post("/claim", async (req, res) => {
+    claimMeal(req.body.donor_username, req.session.user.username);
+
+    let donations = await getDonations();
+
+    res.render('pages/market',
+        {
+            user_meals: transactions[req.session.user.username]['mealsRemaining'],
+            donations: donations
+        });
+});
+
+app.post("/donate", async (req, res) => {
+    donateMeal(req.session.user.username);
+
+    let donations = await getDonations();
+
+    res.render('pages/market',
+        {
+            user_meals: transactions[req.session.user.username]['mealsRemaining'],
+            donations: donations
+        });
+});
 
 app.post('/delete_user', function (req, res) {
     const query = 'DELETE FROM users WHERE username=$1';
@@ -288,9 +286,6 @@ app.post('/delete_user', function (req, res) {
             return console.log(err);
         });
 });
-
-// Authentication middleware
-
 
 // Listen on port 3000
 app.listen(3000);

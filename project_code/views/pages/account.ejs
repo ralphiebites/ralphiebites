@@ -1,29 +1,45 @@
 <%- include ('../partials/header') %>
-<%- include ('../partials/menu') %>
+<%- include ('../partials/menu_top') %>
+<li class="nav-item nav-secondary">
+    <a class="nav-link" href="/home">Home</a>
+</li>
+<li class="nav-item">
+    <a class="nav-link" aria-current="page" href="/market">Market</a>
+</li>
+<li class="nav-item">
+    <a class="nav-link active" href="/account">Account</a>
+</li>
+<li class="nav-item">
+    <a class="nav-link" href="/help">Help</a>
+</li>
+<%- include ('../partials/menu_bottom') %>
 
 <main class="container h-75">
-    <div class="container h-100 d-flex flex-column align-items-center justify-content-center fs-2">
-        <table class="table w-50 mb-5">
-            <tbody>
-                <trs>
-                    <th scope="row">Username</th>
-                    <td class="text-end"><%- username%></td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Name</th>
-                        <td class="text-end"><%- first_name%> <%- last_name%></td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Email</th>
-                        <td class="text-end"><%- email%></td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Meals</th>
-                        <td class="text-end">19</td>
-                    </tr>
-            </tbody>
-        </table>
-
+    <div class="container h-100 d-flex flex-column align-items-center justify-content-center">
+        <h1 class="mb-3 display-6"><%- first_name%>'s Account</h1>
+        <div class="card w-50 rounded bg-dark mb-1">
+            <table class="table w-100 table-dark">
+                <tbody>
+                    <trs>
+                        <tr>
+                            <th scope="row">Username</th>
+                            <td class="text-end text-warning"><%- username%></td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Name</th>
+                            <td class="text-end text-warning"><%- first_name%> <%- last_name%></td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Email</th>
+                            <td class="text-end text-warning"><%- email%></td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Meals</th>
+                            <td class="text-end text-warning"><%- meals%></td>
+                        </tr>
+                </tbody>
+            </table>
+        </div>
         <form class="w-50" action="/delete_user" method="post">
             <div class="col-md-12 w-100">
                 <button class="btn btn-danger text-uppercase w-100" type="submit">Delete Account</button>
