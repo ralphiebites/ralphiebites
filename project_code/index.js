@@ -196,7 +196,7 @@ app.post("/register", async (req, res) => {
     let errmsg = "err:";
     let flag = -1;
     if (req.body.password && req.body.email) {
-        if (req.body.password != req.body.ConfirmPassword) {
+        if (req.body.password != req.body.confirm_password) {
             errmsg = "Wrong confirm password entered.";
             flag = 0;
         }

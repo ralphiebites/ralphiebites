@@ -1,35 +1,36 @@
 <%- include ('../partials/header') %>
 <%- include ('../partials/menu') %>
 
-<main>
-    <div class="container" style="text-align: center;">
-        <h1 style="font-size: 85px">Market</h1>
-        <body style="background-color: burlywood;">
-            <div class="container">
-                <div class="row" style="padding-right: 10%;padding-left: 10%;">
-                    <div class="col-sm" style="background-color: gold;padding: 5%;border-style: solid;border-width: 50px;border-color: burlywood;">
-                        <h4 style="padding: 5%;">Account Meal Count
-                            <h5 style="padding-bottom: 5%;">[placeholder]</h5>
-                        </h4>
-                        <!-- insert code for getting meals in account -->
-                        
-                        <button type="button">Give 1 Meal</button>
-                    </div>
-
-                    <div class="col-sm" style="background-color: gold;padding: 5%;border-style: solid;border-width: 50px;border-color: burlywood;">
-                        <h4 style="padding: 5%;">Available Meal Count</h4>
-                        <!-- {insert code for getting meals available in community -->
-                        <h5 style="padding-bottom: 5%;">[placeholder]</h5>
-                        <button type="button">Take 1 Meal</button>
+<main class="container h-75">
+    <div class="container h-100 d-flex flex-column align-items-center justify-content-center">
+        <h1 class="fs-1 mb-5">Market</h1>
+        <div class="row w-50">
+            <div class="col-sm-6">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title text-center fw-bold">Donate Meal</h5>
+                        <h5 class="card-body text-center">
+                            <p class="fs-1 text-success">19</p>
+                            <p>meals available</p>
+                        </h5>
+                        <a href="#" class="btn btn-primary position-bottom w-100 text-uppercase">Donate</a>
                     </div>
                 </div>
-
-                <div>
-                    <h4></h4>
-                </div>
-                
             </div>
-        </body>
+
+            <div class="col-sm-6">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title text-center fw-bold">Request Meal</h5>
+                        <h5 class="card-body text-center">
+                            <p class="fs-1 text-success">3</p>
+                            <p>meals available</p>
+                        </h5>
+                        <a href="#" class="btn btn-primary position-bottom w-100 text-uppercase">Request</a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </main>
 
