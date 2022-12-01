@@ -111,14 +111,112 @@ app.get("/login", (req, res) => {
     res.render("pages/login");
 });
 
-app.get("/logout", (req, res) => {
-    req.session.destroy();
-    res.render("pages/login");
-});
-
 app.get("/register", (req, res) => {
     res.render("pages/register");
 });
+
+app.post("/register", async (req, res) => {
+    const hash = await bcrypt.hash(req.body.password, 10);
+    let email = req.body.email;
+    console.log(email);
+    const myArray = email.split("@");
+    console.log(myArray);
+    console.log(!myArray[1].localeCompare("colorado.edu"));
+    let errmsg = "err:";
+    let flag = -1;
+    if (req.body.password && req.body.email) {
+        if (req.body.password != req.body.ConfirmPassword) {
+            errmsg = "Wrong confirm password entered.";
+            flag = 0;
+        }
+        if (!(myArray[1].localeCompare("colorado.edu") == 0)) {
+            console.log(myArray[1]);
+            errmsg += " Email has to be colorado.edu.";
+            flag = 0;
+        }
+        if (flag == -1) {
+            const query = "INSERT INTO users (username, password, first_name, last_name, email) VALUES ($1, $2, $3, $4, $5);";
+            db.any(query, [req.body.username, hash, req.body.first_name, req.body.last_name, email])
+                .then(function () {
+                    console.log('success');
+                    res.render("pages/login");
+                })
+                .catch(function (err) {
+                    console.log(err);
+                    res.redirect("/register");
+                    return "Error registering";
+                });
+        } else {
+            console.log(errmsg)
+            res.render("pages/register", {
+                error: true,
+                message: errmsg,
+            });
+        }
+
+    } else {
+        console.log(errmsg)
+        res.render("pages/register", {
+            error: true,
+            message: "Didn't enter.",
+        });
+    }
+});
+
+
+app.post("/login", (req, res) => {
+    const query = "SELECT password FROM users WHERE username = $1;";
+    db.one(query, [req.body.username])
+        .then(async function (user) {
+            const match = await bcrypt.compare(req.body.password, user.password);
+            if (match) {
+                req.session.user = {
+                    api_key: process.env.API_KEY,
+                    username: req.body.username,
+                };
+                req.session.save();
+                res.redirect("/market");
+            } else {
+                res.render("pages/login", {
+                    error: true,
+                    message: err.message,
+                });
+            }
+        })
+        .catch(function (err) {
+            res.render("pages/login", {
+                error: true,
+                message: err.message,
+            });
+        });
+});
+
+
+const auth = (req, res, next) => {
+    if (!req.session.user) {
+        return res.redirect('/register');
+    }
+    next();
+};
+app.use(auth);
+
+app.get("/account", async (req, res) => {
+    const query = 'SELECT * FROM users WHERE username = $1;';
+    db.one(query, [req.session.user.username])
+    .then(function (data) {
+        res.render('pages/account',
+        {
+            username: data.username,
+            first_name: data.first_name,
+            last_name: data.last_name,
+            email: data.email,
+        });
+    })
+    .catch(function (err) {
+        return console.log(err);
+    })
+});
+
 
 app.get("/market", async (req, res) => {
     res.render('pages/market');
@@ -178,80 +276,6 @@ app.get("/give", (req, res) => {
 });
 
 // POST requests
-app.post("/register", async (req, res) => {
-    const hash = await bcrypt.hash(req.body.password, 10);
-    let email = req.body.email;
-    console.log(email);
-    const myArray = email.split("@");
-    console.log(myArray);
-    console.log(!myArray[1].localeCompare("colorado.edu"));
-    let errmsg = "err:";
-    let flag = -1;
-    if (req.body.password && req.body.email) {
-        if (req.body.password != req.body.ConfirmPassword) {
-            errmsg = "Wrong confirm password entered.";
-            flag = 0;
-        }
-        if (!(myArray[1].localeCompare("colorado.edu") == 0)) {
-            console.log(myArray[1]);
-            errmsg += " Email has to be colorado.edu.";
-            flag = 0;
-        }
-        if (flag == -1) {
-            const query = "INSERT INTO users (username, password, first_name, last_name, email) VALUES ($1, $2, $3, $4, $5);";
-            db.any(query, [req.body.username, hash, req.body.first_name, req.body.last_name, email])
-                .then(function () {
-                    console.log('success');
-                    res.render("pages/login");
-                })
-                .catch(function (err) {
-                    console.log(err);
-                    res.redirect("/register");
-                    return "Error registering";
-                });
-        } else {
-            console.log(errmsg)
-            res.render("pages/register", {
-                error: true,
-                message: errmsg,
-            });
-        }
-
-    } else {
-        console.log(errmsg)
-        res.render("pages/register", {
-            error: true,
-            message: "Didn't enter.",
-        });
-    }
-});
-
-app.post("/login", (req, res) => {
-    const query = "SELECT password FROM users WHERE username = $1;";
-    db.one(query, [req.body.username])
-        .then(async function (user) {
-            const match = await bcrypt.compare(req.body.password, user.password);
-            if (match) {
-                req.session.user = {
-                    api_key: process.env.API_KEY,
-                    username: req.body.username,
-                };
-                req.session.save();
-                res.redirect("/market");
-            } else {
-                res.render("pages/login", {
-                    error: true,
-                    message: err.message,
-                });
-            }
-        })
-        .catch(function (err) {
-            res.render("pages/login", {
-                error: true,
-                message: err.message,
-            });
-        });
-});
 
 app.post('/delete_user', function (req, res) {
     const query = 'DELETE FROM users WHERE username=$1';
@@ -266,13 +290,7 @@ app.post('/delete_user', function (req, res) {
 });
 
 // Authentication middleware
-const auth = (req, res, next) => {
-    if (!req.session.user) {
-        return res.redirect('/register');
-    }
-    next();
-};
-app.use(auth);
+
 
 // Listen on port 3000
 app.listen(3000);
