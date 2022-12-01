@@ -32,6 +32,9 @@ let transactions = {
     }
 };
 
+// Express config
+app.use(express.static('resources'));
+
 // Database configuration
 const dbConfig = {
     host: "db",
@@ -115,6 +118,78 @@ app.get("/register", (req, res) => {
     res.render("pages/register");
 });
 
+app.get("/account", async (req, res) => {
+    const query = 'SELECT * FROM users WHERE username = $1;';
+    db.one(query, [req.session.user.username])
+        .then(function (data) {
+            res.render('pages/account',
+                {
+                    username: data.username,
+                    first_name: data.first_name,
+                    last_name: data.last_name,
+                    email: data.email,
+                });
+        })
+        .catch(function (err) {
+            return console.log(err);
+        })
+});
+
+
+app.get("/market", async (req, res) => {
+    res.render('pages/market');
+});
+
+app.get("/home", async (req, res) => {
+    res.render('pages/home');
+});
+
+app.get("/help", async (req, res) => {
+    res.render('pages/help');
+});
+
+app.get("/logout", (req, res) => {
+    req.session.destroy();
+    res.render("pages/login");
+});
+
+app.get("/get", (req, res) => {
+    let accountID = req.session.user.username;
+
+    if (inTransactions(accountID)) {
+        transactions[accountID] = { "action": "get", "mealsRemaining": transactions[accountID]["mealsRemaining"] };
+    } else {
+        transactions[accountID] = { "action": "get", "mealsRemaining": 19 };
+    }
+
+    let transactionSuccess = match();
+
+    if (transactionSuccess) {
+        console.log("Success");
+    } else {
+        console.log("Fail");
+    }
+});
+
+app.get("/give", (req, res) => {
+    let accountID = req.session.user.username;
+
+    if (inTransactions(accountID)) {
+        transactions[accountID] = { "action": "give", "mealsRemaining": transactions[accountID]["mealsRemaining"] };
+    } else {
+        transactions[accountID] = { "action": "give", "mealsRemaining": 19 };
+    }
+
+    let transactionSuccess = match();
+
+    if (transactionSuccess) {
+        console.log("Transaction success!");
+    } else {
+        console.log("Transaction fail!");
+    }
+});
+
+// POST requests
 app.post("/register", async (req, res) => {
     const hash = await bcrypt.hash(req.body.password, 10);
     let email = req.body.email;
@@ -175,7 +250,7 @@ app.post("/login", (req, res) => {
                     username: req.body.username,
                 };
                 req.session.save();
-                res.redirect("/market");
+                res.redirect("/home");
             } else {
                 res.render("pages/login", {
                     error: true,
@@ -191,92 +266,6 @@ app.post("/login", (req, res) => {
         });
 });
 
-
-const auth = (req, res, next) => {
-    if (!req.session.user) {
-        return res.redirect('/register');
-    }
-    next();
-};
-app.use(auth);
-
-app.get("/account", async (req, res) => {
-    const query = 'SELECT * FROM users WHERE username = $1;';
-    db.one(query, [req.session.user.username])
-    .then(function (data) {
-        res.render('pages/account',
-        {
-            username: data.username,
-            first_name: data.first_name,
-            last_name: data.last_name,
-            email: data.email,
-        });
-    })
-    .catch(function (err) {
-        return console.log(err);
-    })
-});
-
-
-app.get("/market", async (req, res) => {
-    res.render('pages/market');
-});
-
-app.get("/settings", async (req, res) => {
-    res.render('pages/settings');
-});
-
-app.get("/about_us", async (req, res) => {
-    res.render('pages/about_us');
-});
-
-app.get("/help", async (req, res) => {
-    res.render('pages/help');
-});
-
-app.get("/logout", (req, res) => {
-    req.session.destroy();
-    res.render("pages/login");
-});
-
-app.get("/get", (req, res) => {
-    let accountID = req.session.user.username;
-
-    if (inTransactions(accountID)) {
-        transactions[accountID] = { "action": "get", "mealsRemaining": transactions[accountID]["mealsRemaining"] };
-    } else {
-        transactions[accountID] = { "action": "get", "mealsRemaining": 19 };
-    }
-
-    let transactionSuccess = match();
-
-    if (transactionSuccess) {
-        console.log("Success");
-    } else {
-        console.log("Fail");
-    }
-});
-
-app.get("/give", (req, res) => {
-    let accountID = req.session.user.username;
-
-    if (inTransactions(accountID)) {
-        transactions[accountID] = { "action": "give", "mealsRemaining": transactions[accountID]["mealsRemaining"] };
-    } else {
-        transactions[accountID] = { "action": "give", "mealsRemaining": 19 };
-    }
-
-    let transactionSuccess = match();
-
-    if (transactionSuccess) {
-        console.log("Transaction success!");
-    } else {
-        console.log("Transaction fail!");
-    }
-});
-
-// POST requests
-
 app.post('/delete_user', function (req, res) {
     const query = 'DELETE FROM users WHERE username=$1';
     db.any(query, [req.session.user.username])
@@ -290,7 +279,13 @@ app.post('/delete_user', function (req, res) {
 });
 
 // Authentication middleware
-
+const auth = (req, res, next) => {
+    if (!req.session.user) {
+        return res.redirect('/register');
+    }
+    next();
+};
+app.use(auth);
 
 // Listen on port 3000
 app.listen(3000);
