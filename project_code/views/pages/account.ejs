@@ -15,9 +15,9 @@
 <%- include ('../partials/menu_bottom') %>
 
 <main class="container h-75">
-    <div class="container h-100 d-flex flex-column align-items-center justify-content-center fs-2">
-        <h1 class="mb-3">Account Overview</h1>
-        <div class="card w-50 rounded bg-dark">
+    <div class="container h-100 d-flex flex-column align-items-center justify-content-center">
+        <h1 class="mb-3 display-6"><%- first_name%>'s Account</h1>
+        <div class="card w-50 rounded bg-dark mb-1">
             <table class="table w-100 table-dark">
                 <tbody>
                     <trs>
@@ -35,7 +35,7 @@
                         </tr>
                         <tr>
                             <th scope="row">Meals</th>
-                            <td class="text-end text-warning">19</td>
+                            <td class="text-end text-warning"><%- meals%></td>
                         </tr>
                 </tbody>
             </table>

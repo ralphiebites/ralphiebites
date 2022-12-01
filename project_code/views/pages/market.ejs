@@ -14,36 +14,60 @@
 </li>
 <%- include ('../partials/menu_bottom') %>
 
-<main class="container h-75">
-    <div class="container h-100 d-flex flex-column align-items-center justify-content-center">
-        <h1 class="mb-5">Market</h1>
-        <div class="row w-50">
-            <div class="col-sm-6">
-                <div class="card h-100 bg-dark text-light">
-                    <div class="card-body">
-                        <h5 class="card-title text-center fw-bold">Donate Meal</h5>
-                        <h5 class="card-body text-center">
-                            <p class="fs-1 text-warning">19</p>
-                            <p>meals available</p>
-                        </h5>
-                        <a href="#" class="btn btn-warning position-bottom w-100 fw-bold text-uppercase">Donate</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-sm-6">
-                <div class="card h-100 bg-dark text-light">
-                    <div class="card-body">
-                        <h5 class="card-title text-center fw-bold">Request Meal</h5>
-                        <h5 class="card-body text-center">
-                            <p class="fs-1 text-warning">3</p>
-                            <p>meals available</p>
-                        </h5>
-                        <a href="#" class="btn btn-warning position-bottom w-100 fw-bold text-uppercase">Request</a>
-                    </div>
+<main class="container h-75 w-100 flex-column">
+    <div class="container h-100 w-100 d-flex flex-column align-items-center mt-5">
+        <div class="container d-flex w-100 align-items-center justify-content-center mb-5">
+            <div class="card h-100 w-25 bg-dark text-light">
+                <div class="card-body">
+                    <h5 class="card-title text-center fw-bold">Donate Meal</h5>
+                    <h5 class="card-body text-center">
+                        <p class="fs-1 text-warning"><%- user_meals%></p>
+                        <p>meals available</p>
+                    </h5>
+                    <form action="/donate" method="post">
+                        <% if (user_meals == 0) { %>
+                        <button class="btn btn-warning position-bottom w-100 fw-bold text-uppercase disabled">Donate</button>
+                        <% } else { %>
+                        <button class="btn btn-warning position-bottom w-100 fw-bold text-uppercase">Donate</button>
+                        <% } %>
+                    </form>
                 </div>
             </div>
         </div>
+
+        <% if (donations.length > 0) { %>
+        <div class="container w-75">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Donor First Name</th>
+                        <th scope="col">Donor Last Name</th>
+                        <th scope="col">Donation Amount</th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% for (let i = 0; i < donations.length; i++) { %>
+                    <form action="/claim" method="POST">
+                        <tr>
+                            <td><%= donations[i].first_name %></td>
+                            <td><%= donations[i].last_name %></td>
+                            <td><%= donations[i].donating %></td>
+                            <td>
+                                <button type="submit" class="btn btn-warning position-bottom w-100 fw-bold text-uppercase" name="donor_username" value="<%= donations[i].username%>">
+                                    Claim
+                                </button>
+                            </td>
+                        </tr>
+                    </form>
+                    <%}%>
+            </tbody>
+        </table>
+        </div>
+        <%}%>
+        </div>
+    </div>
+    </div>
     </div>
 </main>
 
