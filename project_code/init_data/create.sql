@@ -7,9 +7,9 @@ CREATE TABLE users(
     email VARCHAR(50) NOT NULL
 );
 
-INSERT INTO users (username, password, first_name, last_name, email) VALUES ('jopt6529', '1234', 'Joe', 'Ptac', 'jopt6529@colorado.edu');
-INSERT INTO users (username, password, first_name, last_name, email) VALUES ('pasm9872', '4321', 'Pat', 'Smith', 'pasm9872@colorado.edu');
-INSERT INTO users (username, password, first_name, last_name, email) VALUES ('sejk5632', 'password!', 'Sean', 'Jkacobi', 'sejk5632@colorado.edu');
-INSERT INTO users (username, password, first_name, last_name, email) VALUES ('rikl4432', '@passcode', 'Riley', 'Klein', 'rikl4432@colorado.edu');
-INSERT INTO users (username, password, first_name, last_name, email) VALUES ('benw1783', 'fluffy123', 'Ben', 'Nwaker', 'benw1783@colorado.edu');
-INSERT INTO users (username, password, first_name, last_name, email) VALUES ('lojf5934', 'lava876', 'Lorien', 'Jfall', 'lojf5934@colorado.edu');
+INSERT INTO users (username, password, first_name, last_name, email) VALUES ('nica6529', 'loop$', 'Nina', 'Carnell', 'nica6529@colorado.edu');
+INSERT INTO users (username, password, first_name, last_name, email) VALUES ('xame9872', 'jet78laser', 'Xander', 'Merrick', 'xame9872@colorado.edu');
+INSERT INTO users (username, password, first_name, last_name, email) VALUES ('aial5632', 'rainbows!', 'Aili', 'Alma', 'aial5632@colorado.edu');
+INSERT INTO users (username, password, first_name, last_name, email) VALUES ('arkl4432', 'mockingbird12', 'Ari', 'Klein', 'arkl4432@colorado.edu');
+INSERT INTO users (username, password, first_name, last_name, email) VALUES ('soro1783', 'fluffy123', 'Sonia', 'Rohan', 'soro1783@colorado.edu');
+INSERT INTO users (username, password, first_name, last_name, email) VALUES ('rabi5934', 'lava876', 'Ravi', 'Bieler', 'rabi5934@colorado.edu');
