@@ -276,6 +276,8 @@ app.post("/donate", async (req, res) => {
 });
 
 app.post('/delete_user', function (req, res) {
+    delete transactions[req.session.user.username];
+
     const query = 'DELETE FROM users WHERE username=$1';
     db.any(query, [req.session.user.username])
         .then(function (data) {
