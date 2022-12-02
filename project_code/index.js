@@ -145,27 +145,27 @@ app.use(auth);
 
 // Global transactions object
 let transactions = {
-    'jopt6529': {
+    'nica6529': {
         'giving': 1,
         'mealsRemaining': 6
     },
-    'pasm9872': {
+    'xame9872': {
         'giving': 1,
         'mealsRemaining': 18
     },
-    'sejk5632': {
+    'aial5632': {
         'giving': 2,
         'mealsRemaining': 3
     },
-    'rikl4432': {
+    'arkl4432': {
         'giving': 0,
         'mealsRemaining': 0
     },
-    'benw1783': {
+    'soro1783': {
         'giving': 3,
         'mealsRemaining': 16
     },
-    'lojf5934': {
+    'rabi5934': {
         'giving': 8,
         'mealsRemaining': 11
     }
